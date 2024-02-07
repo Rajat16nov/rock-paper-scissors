@@ -51,24 +51,38 @@ function checkWinner(x1, x2) {
 }
 
 function playGame() {
-  for (let i = 1; i < 6; i++) {
-    console.log("Round: " + i);
-    const playerSelection = prompt("What do you choose?: ");
-    console.log("Player selects: " + i);
-    const computerSelection = getComputerChoice();
-    console.log("Computer selects: " + i);
-    console.log(playRound(playerSelection, computerSelection));
-    console.log("Player score: " + playerScore);
-    console.log("Computer score: " + computerScore);
-  }
+  const body = document.querySelector("body");
+  const gameplay = document.createElement("p");
+  const scoreboard = document.createElement("p");
+  const winner = document.createElement("h2");
 
-  if (playerScore > computerScore) {
-    console.log("Player wins" + playerScore + " : " + computerScore);
-  } else if (computerScore > playerScore) {
-    console.log("Computer wins" + computerScore + " : " + playerScore);
-  } else {
-    console.log("It's a tie!");
-  }
+  const buttonsList = document.querySelectorAll(".choose");
+  let playerSelection;
+  buttonsList.forEach(function (button) {
+    button.addEventListener("click", function (e) {
+      winner.remove();
+      const computerSelection = getComputerChoice();
+      playerSelection = e.target.textContent;
+      gameplay.innerText = `You chose ${playerSelection} | Computer chose ${computerSelection}`;
+      body.appendChild(gameplay);
+      playRound(playerSelection, computerSelection);
+      scoreboard.innerText = `Score -> Player: ${playerScore} | Computer: ${computerScore}`;
+      body.appendChild(scoreboard);
+      if (playerScore == 5 || computerScore == 5) {
+        if (playerScore == 5) {
+          winner.innerText = `You won 🎉`;
+          playerScore = 0;
+          computerScore = 0;
+        }
+        if (computerScore == 5) {
+          winner.innerText = `Computer won 😅`;
+          playerScore = 0;
+          computerScore = 0;
+        }
+        body.appendChild(winner);
+      }
+    });
+  });
 }
 
 playGame();
